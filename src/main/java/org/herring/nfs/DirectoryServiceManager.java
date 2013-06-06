@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * << Description >>
@@ -17,15 +19,16 @@ import java.util.List;
  */
 public class DirectoryServiceManager implements DirectoryServiceInterface {
 
-    HashMap<String, Integer> fileHashMap;
+    ConcurrentHashMap<String, Integer> fileHashMap;
 
     public DirectoryServiceManager() {
-        fileHashMap = new HashMap<String, Integer>();
+        fileHashMap = new ConcurrentHashMap<String, Integer>();
         Configuration configuration = Configuration.getInstance();
         File rootDir = new File(configuration.root);
         File[] rootContents = rootDir.listFiles();
 
         //이전에 저장되어 있는 파일의 목록 읽기
+        //TODO: 가장 처음 생성 시 처리
         for (File file : rootContents) {
             fileHashMap.put(file.getName(), 1);
         }
@@ -50,7 +53,10 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             buffer.put(configuration.delimiter.getBytes());
             buffer.flip();
 
+            //쓰기 중인 파일 채널을 Lock
+            FileLock lock = fileChannel.lock();
             fileChannel.write(buffer);
+            lock.release();
 
             addedFile.close();
             fileChannel.close();
@@ -60,6 +66,8 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+
         }
     }
 
@@ -81,7 +89,12 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
                 buffer.put(aString.getBytes());
                 buffer.put(configuration.delimiter.getBytes());
                 buffer.flip();
+
+                //쓰기 중인 파일 채널을 Lock
+                FileLock lock = fileChannel.lock();
                 fileChannel.write(buffer);
+                lock.release();
+
                 buffer.clear();
 
             }
@@ -93,6 +106,16 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+    @Override
+    public byte[] getData(String locate) {
+        if(fileHashMap.get(locate) == null){
+            System.out.println("Do not exist "+locate);
+            return null;
+        }
+        return null;
+    }
+
+
 }
