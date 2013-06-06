@@ -13,6 +13,8 @@ public class Configuration {
     private static Configuration instance;
 
     public String root;
+    public String fileName;
+    public String delimiter;
 
     public static Configuration getInstance(){
         if(instance == null)
@@ -27,6 +29,8 @@ public class Configuration {
             configuration.load();
 
             root = configuration.getString("root");
+            fileName = configuration.getString("filename");
+            delimiter = configuration.getString("delimiter");
 
         } catch (ConfigurationException e) {
             e.printStackTrace();
