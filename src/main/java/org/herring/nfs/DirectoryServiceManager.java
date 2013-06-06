@@ -84,20 +84,21 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
             RandomAccessFile addedFile = new RandomAccessFile(fileName, "rw");
             FileChannel fileChannel = addedFile.getChannel();
+            //쓰기 중인 파일 채널을 Lock
+            FileLock lock = fileChannel.lock();
+
             for (String aString : data) {
                 ByteBuffer buffer = ByteBuffer.allocate(aString.length() + 2);
                 buffer.put(aString.getBytes());
                 buffer.put(configuration.delimiter.getBytes());
                 buffer.flip();
 
-                //쓰기 중인 파일 채널을 Lock
-                FileLock lock = fileChannel.lock();
                 fileChannel.write(buffer);
-                lock.release();
 
                 buffer.clear();
 
             }
+            lock.release();
             addedFile.close();
             fileChannel.close();
 
