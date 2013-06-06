@@ -45,7 +45,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             RandomAccessFile addedFile = new RandomAccessFile(fileName, "rw");
             FileChannel fileChannel = addedFile.getChannel();
 
-            ByteBuffer buffer = ByteBuffer.allocate(data.length()+2);
+            ByteBuffer buffer = ByteBuffer.allocate(data.length() + 2);
             buffer.put(data.getBytes());
             buffer.put(configuration.delimiter.getBytes());
             buffer.flip();
@@ -65,6 +65,34 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     @Override
     public void putData(String locate, List<String> data) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (fileHashMap.get(locate) == 1) {
+            System.out.println("Already exist file!");
+            return;
+        }
+
+        try {
+            Configuration configuration = Configuration.getInstance();
+            String fileName = configuration.fileName;
+
+            RandomAccessFile addedFile = new RandomAccessFile(fileName, "rw");
+            FileChannel fileChannel = addedFile.getChannel();
+            for (String aString : data) {
+                ByteBuffer buffer = ByteBuffer.allocate(aString.length() + 2);
+                buffer.put(aString.getBytes());
+                buffer.put(configuration.delimiter.getBytes());
+                buffer.flip();
+                fileChannel.write(buffer);
+                buffer.clear();
+
+            }
+            addedFile.close();
+            fileChannel.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
