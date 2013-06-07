@@ -5,7 +5,9 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,12 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 오후 10:38
  */
 public class DirectoryServiceManager implements DirectoryServiceInterface {
-
+    static LinkedHashMap<String, byte[]> cache;
+    final Configuration configuration = Configuration.getInstance();
     ConcurrentHashMap<String, Integer> fileHashMap;
 
     public DirectoryServiceManager() {
         fileHashMap = new ConcurrentHashMap<String, Integer>();
-        Configuration configuration = Configuration.getInstance();
+
+        //FIFO를 위한 초기화
+        cache = new LinkedHashMap<String, byte[]>(configuration.cacheSize + 1, .75F, false) {
+            protected boolean removeEldestEntry(Map.Entry<String, byte[]> eldest) {
+                return size() > configuration.cacheSize;
+            }
+        };
+
         File rootDir = new File(configuration.root);
         File[] rootContents = rootDir.listFiles();
 
@@ -39,7 +49,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         }
 
         try {
-            Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
             RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -54,6 +63,9 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             FileLock lock = fileChannel.lock();
             fileChannel.write(buffer);
             lock.release();
+
+            //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
+            cache.put(locate, data.getBytes());
 
             addedFile.close();
             fileChannel.close();
@@ -74,7 +86,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         }
 
         try {
-            Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
             RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -110,7 +121,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             return null;
         }
         try {
-            Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
             RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -136,7 +146,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             return null;
         }
         try {
-            Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
             RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -158,14 +167,13 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
     @Override
     public String getLine(String locate, int lineCount) {
         byte[] fileByteArr = getData(locate);
-        Configuration configuration = Configuration.getInstance();
         try {
             String decodedString = new String(fileByteArr, "UTF-8");
             String[] decodedArray = decodedString.split(configuration.delimiter);
             return decodedArray[lineCount];
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("요청된 line 이 파일에 기록된 line 수를 초과합니다.");
         }
         return null;

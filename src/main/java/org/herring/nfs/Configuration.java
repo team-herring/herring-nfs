@@ -15,6 +15,7 @@ public class Configuration {
     public String root;
     public String fileName;
     public String delimiter;
+    public int cacheSize;
 
     private static final class ConfigurationHolder {
         private static final Configuration INSTANCE = new Configuration();
@@ -33,6 +34,7 @@ public class Configuration {
             root = configuration.getString("root");
             fileName = configuration.getString("filename");
             delimiter = configuration.getString("delimiter");
+            cacheSize = configuration.getInt("cachesize");
 
         } catch (ConfigurationException e) {
             e.printStackTrace();
