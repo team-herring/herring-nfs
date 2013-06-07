@@ -11,4 +11,5 @@ public interface DirectoryServiceInterface {
     void putData(String locate, String data);
     void putData(String locate, List<String> data);
     byte[] getData(String locate);
+    byte[] getData(String locate, int offset, int size);
 }

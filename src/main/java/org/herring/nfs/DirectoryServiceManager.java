@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.WritableByteChannel;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -122,6 +121,32 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             FileLock lock = fileChannel.lock();
             MappedByteBuffer mappedByteBuffer;
             mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,0,fileChannel.size());
+            lock.release();
+
+            return mappedByteBuffer.array();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public byte[] getData(String locate, int offset, int size) {
+        if(fileHashMap.get(locate) == null){
+            System.out.println("Do not exist "+locate);
+            return null;
+        }
+        try{
+            Configuration configuration = Configuration.getInstance();
+            String rootDirectory = configuration.root;
+
+            RandomAccessFile file = new RandomAccessFile(rootDirectory+"/"+locate,"rw");
+            FileChannel fileChannel = file.getChannel();
+            FileLock lock = fileChannel.lock();
+            MappedByteBuffer mappedByteBuffer;
+            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,offset,size);
             lock.release();
 
             return mappedByteBuffer.array();
