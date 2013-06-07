@@ -36,6 +36,15 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+
+        <!-- ==================== -->
+        <!-- =====Commons-io===== -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commonsio.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

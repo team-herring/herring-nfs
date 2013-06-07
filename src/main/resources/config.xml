@@ -2,6 +2,5 @@
 
 <nfs>
     <root>./data</root>
-    <delimiter>\n</delimiter>
     <cachesize>100</cachesize>
 </nfs>

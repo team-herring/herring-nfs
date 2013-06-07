@@ -51,18 +51,14 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         }
     }
 
-    public static DirectoryServiceManager getInstance() {
-        return DirectoryServiceManagerHolder.INSTANCE;
-    }
-
     @Override
     public void putData(String locate, String data) {
-        if (fileHashMap.get(locate) == 1) {
+        if (fileHashMap.get(locate) != null) {
             System.out.println("Already exist file!");
             return;
         }
-
         try {
+            fileHashMap.put(locate,1);
             String rootDirectory = configuration.root;
 
             RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -94,12 +90,14 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     @Override
     public void putData(String locate, List<String> data) {
-        if (fileHashMap.get(locate) == 1) {
+        if (fileHashMap.get(locate) != null) {
             System.out.println("Already exist file!");
             return;
         }
 
         try {
+            fileHashMap.put(locate,1);
+
             String rootDirectory = configuration.root;
 
             RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -225,10 +223,4 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         }
         return null;
     }
-
-    private static final class DirectoryServiceManagerHolder {
-        public static final DirectoryServiceManager INSTANCE = new DirectoryServiceManager();
-    }
-
-
 }

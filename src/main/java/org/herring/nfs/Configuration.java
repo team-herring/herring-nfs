@@ -31,7 +31,7 @@ public class Configuration {
             configuration.load();
 
             root = configuration.getString("root");
-            delimiter = configuration.getString("delimiter");
+            delimiter = System.getProperty("line.separator");
             cacheSize = configuration.getInt("cachesize");
 
         } catch (ConfigurationException e) {
