@@ -18,6 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 오후 10:38
  */
 public class DirectoryServiceManager implements DirectoryServiceInterface {
+
+    private static final class DirectoryServiceManagerHolder{
+        public static final DirectoryServiceManager INSTANCE = new DirectoryServiceManager();
+    }
+
+    public DirectoryServiceManager getInstance(){
+        return DirectoryServiceManagerHolder.INSTANCE;
+    }
+
     static LinkedHashMap<String, byte[]> cache;
     final Configuration configuration = Configuration.getInstance();
     ConcurrentHashMap<String, Integer> fileHashMap;

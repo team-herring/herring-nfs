@@ -27,6 +27,15 @@
             <artifactId>commons-configuration</artifactId>
             <version>${commonsconf.version}</version>
         </dependency>
+
+        <!-- ==================== -->
+        <!-- ========JUnit======= -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
