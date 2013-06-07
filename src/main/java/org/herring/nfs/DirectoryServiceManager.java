@@ -5,9 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.HashMap;
+import java.nio.channels.WritableByteChannel;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,9 +44,9 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
         try {
             Configuration configuration = Configuration.getInstance();
-            String fileName = configuration.fileName;
+            String rootDirectory = configuration.root;
 
-            RandomAccessFile addedFile = new RandomAccessFile(fileName, "rw");
+            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory+"/"+locate, "rw");
             FileChannel fileChannel = addedFile.getChannel();
 
             ByteBuffer buffer = ByteBuffer.allocate(data.length() + 2);
@@ -66,8 +67,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-
         }
     }
 
@@ -80,13 +79,13 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
         try {
             Configuration configuration = Configuration.getInstance();
-            String fileName = configuration.fileName;
+            String rootDirectory = configuration.root;
 
-            RandomAccessFile addedFile = new RandomAccessFile(fileName, "rw");
+            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory+"/"+locate, "rw");
             FileChannel fileChannel = addedFile.getChannel();
+
             //쓰기 중인 파일 채널을 Lock
             FileLock lock = fileChannel.lock();
-
             for (String aString : data) {
                 ByteBuffer buffer = ByteBuffer.allocate(aString.length() + 2);
                 buffer.put(aString.getBytes());
@@ -96,7 +95,6 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
                 fileChannel.write(buffer);
 
                 buffer.clear();
-
             }
             lock.release();
             addedFile.close();
@@ -114,6 +112,23 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         if(fileHashMap.get(locate) == null){
             System.out.println("Do not exist "+locate);
             return null;
+        }
+        try{
+            Configuration configuration = Configuration.getInstance();
+            String rootDirectory = configuration.root;
+
+            RandomAccessFile file = new RandomAccessFile(rootDirectory+"/"+locate,"rw");
+            FileChannel fileChannel = file.getChannel();
+            FileLock lock = fileChannel.lock();
+            MappedByteBuffer mappedByteBuffer;
+            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,0,fileChannel.size());
+            lock.release();
+
+            return mappedByteBuffer.array();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
