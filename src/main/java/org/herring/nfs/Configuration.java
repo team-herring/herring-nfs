@@ -13,7 +13,6 @@ public class Configuration {
     private static Configuration instance;
 
     public String root;
-    public String fileName;
     public String delimiter;
     public int cacheSize;
 
@@ -32,13 +31,18 @@ public class Configuration {
             configuration.load();
 
             root = configuration.getString("root");
-            fileName = configuration.getString("filename");
             delimiter = configuration.getString("delimiter");
             cacheSize = configuration.getInt("cachesize");
 
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public String toString(){
+        return  "Root Directory : "+root+"\n"+
+                "Delimiter : "+delimiter+"\n"+
+                "Cache Size : "+cacheSize;
     }
 
 }

@@ -1,12 +1,13 @@
 package org.herring.nfs;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 /**
- * << Description >>
+ * DirectoryServiceManager 테스트 클래스
  * User: hyunje
  * Date: 13. 6. 7.
  * Time: 오후 9:04
@@ -14,12 +15,19 @@ import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DirectoryServiceManagerTest {
-    static DirectoryServiceManager manager;
+    static DirectoryServiceManager manager = DirectoryServiceManager.getInstance();
+
 
     @BeforeClass
     public static void constructorTest() throws Exception{
-        manager = new DirectoryServiceManager();
-        System.out.println();
+        Assert.assertNotNull(DirectoryServiceManager.cache);
+        Assert.assertNotNull(manager);
+        Assert.assertNotNull(manager.configuration);
+        Assert.assertNotNull(manager.fileHashMap);
+        System.out.println("----------Configuration Value----------");
+        System.out.println(manager.configuration.toString());
+        System.out.println("---------------------------------------");
+
     }
 
     @Test

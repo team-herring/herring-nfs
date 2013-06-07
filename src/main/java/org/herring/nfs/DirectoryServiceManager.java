@@ -19,14 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DirectoryServiceManager implements DirectoryServiceInterface {
 
-    private static final class DirectoryServiceManagerHolder{
-        public static final DirectoryServiceManager INSTANCE = new DirectoryServiceManager();
-    }
-
-    public DirectoryServiceManager getInstance(){
-        return DirectoryServiceManagerHolder.INSTANCE;
-    }
-
     static LinkedHashMap<String, byte[]> cache;
     final Configuration configuration = Configuration.getInstance();
     ConcurrentHashMap<String, Integer> fileHashMap;
@@ -42,7 +34,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         };
 
         File rootDir = new File(configuration.root);
-        if(!rootDir.exists()){
+        if (!rootDir.exists()) {
             System.out.println("루트 디렉토리가 존재하지 않습니다.");
             rootDir.mkdir();
         }
@@ -57,6 +49,10 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
                 fileHashMap.put(file.getName(), 1);
             }
         }
+    }
+
+    public static DirectoryServiceManager getInstance() {
+        return DirectoryServiceManagerHolder.INSTANCE;
     }
 
     @Override
@@ -228,6 +224,10 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             return null;
         }
         return null;
+    }
+
+    private static final class DirectoryServiceManagerHolder {
+        public static final DirectoryServiceManager INSTANCE = new DirectoryServiceManager();
     }
 
 
