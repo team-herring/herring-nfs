@@ -1,9 +1,6 @@
 package org.herring.nfs;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -45,7 +42,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
-            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory+"/"+locate, "rw");
+            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
             FileChannel fileChannel = addedFile.getChannel();
 
             ByteBuffer buffer = ByteBuffer.allocate(data.length() + 2);
@@ -80,7 +77,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
-            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory+"/"+locate, "rw");
+            RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
             FileChannel fileChannel = addedFile.getChannel();
 
             //쓰기 중인 파일 채널을 Lock
@@ -108,19 +105,19 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     @Override
     public byte[] getData(String locate) {
-        if(fileHashMap.get(locate) == null){
-            System.out.println("Do not exist "+locate);
+        if (fileHashMap.get(locate) == null) {
+            System.out.println("Do not exist " + locate);
             return null;
         }
-        try{
+        try {
             Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
-            RandomAccessFile file = new RandomAccessFile(rootDirectory+"/"+locate,"rw");
+            RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
             FileChannel fileChannel = file.getChannel();
             FileLock lock = fileChannel.lock();
             MappedByteBuffer mappedByteBuffer;
-            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,0,fileChannel.size());
+            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
             lock.release();
 
             return mappedByteBuffer.array();
@@ -134,19 +131,19 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     @Override
     public byte[] getData(String locate, int offset, int size) {
-        if(fileHashMap.get(locate) == null){
-            System.out.println("Do not exist "+locate);
+        if (fileHashMap.get(locate) == null) {
+            System.out.println("Do not exist " + locate);
             return null;
         }
-        try{
+        try {
             Configuration configuration = Configuration.getInstance();
             String rootDirectory = configuration.root;
 
-            RandomAccessFile file = new RandomAccessFile(rootDirectory+"/"+locate,"rw");
+            RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
             FileChannel fileChannel = file.getChannel();
             FileLock lock = fileChannel.lock();
             MappedByteBuffer mappedByteBuffer;
-            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,offset,size);
+            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, offset, size);
             lock.release();
 
             return mappedByteBuffer.array();
@@ -154,6 +151,22 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String getLine(String locate, int lineCount) {
+        byte[] fileByteArr = getData(locate);
+        Configuration configuration = Configuration.getInstance();
+        try {
+            String decodedString = new String(fileByteArr, "UTF-8");
+            String[] decodedArray = decodedString.split(configuration.delimiter);
+            return decodedArray[lineCount];
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.err.println("요청된 line 이 파일에 기록된 line 수를 초과합니다.");
         }
         return null;
     }
