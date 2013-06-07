@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,12 +65,12 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             fileChannel.write(buffer);
             lock.release();
 
-            //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
-            cache.put(locate, data.getBytes());
-
             addedFile.close();
             fileChannel.close();
             buffer.clear();
+
+            //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
+            cache.put(locate, data.getBytes());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -93,6 +94,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
             //쓰기 중인 파일 채널을 Lock
             FileLock lock = fileChannel.lock();
+            String inputData = "";
             for (String aString : data) {
                 ByteBuffer buffer = ByteBuffer.allocate(aString.length() + 2);
                 buffer.put(aString.getBytes());
@@ -102,10 +104,16 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
                 fileChannel.write(buffer);
 
                 buffer.clear();
+                inputData += (aString + configuration.delimiter);
             }
             lock.release();
             addedFile.close();
             fileChannel.close();
+
+            inputData.substring(0, inputData.length() - configuration.delimiter.length());
+
+            //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
+            cache.put(locate, inputData.getBytes());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -120,23 +128,33 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             System.out.println("Do not exist " + locate);
             return null;
         }
-        try {
-            String rootDirectory = configuration.root;
 
-            RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
-            FileChannel fileChannel = file.getChannel();
-            FileLock lock = fileChannel.lock();
-            MappedByteBuffer mappedByteBuffer;
-            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
-            lock.release();
+        //Cache Hit
+        if (cache.containsKey(locate)) {
+            return cache.get(locate);
+        } else { //Cache Hit Fail
 
-            return mappedByteBuffer.array();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                String rootDirectory = configuration.root;
+
+                RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
+                FileChannel fileChannel = file.getChannel();
+                FileLock lock = fileChannel.lock();
+                MappedByteBuffer mappedByteBuffer;
+                mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
+                lock.release();
+
+                byte[] mappedByteBufferArray = mappedByteBuffer.array();
+                //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
+                cache.put(locate, mappedByteBufferArray);
+                return mappedByteBufferArray;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -145,28 +163,43 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             System.out.println("Do not exist " + locate);
             return null;
         }
+
         try {
-            String rootDirectory = configuration.root;
+            //Cache Hit
+            if (cache.containsKey(locate)) {
+                Arrays.copyOfRange(cache.get(locate), offset, offset + size);
+            } else { //Cache Hit Fail
+                String rootDirectory = configuration.root;
 
-            RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
-            FileChannel fileChannel = file.getChannel();
-            FileLock lock = fileChannel.lock();
-            MappedByteBuffer mappedByteBuffer;
-            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, offset, size);
-            lock.release();
+                RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
+                FileChannel fileChannel = file.getChannel();
+                FileLock lock = fileChannel.lock();
 
-            return mappedByteBuffer.array();
+                MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,0,fileChannel.size());
+                //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
+                cache.put(locate, mappedByteBuffer.array());
+                mappedByteBuffer.clear();
+
+                //MappedByteBuffer 재할당
+                mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, offset, size);
+                lock.release();
+
+                return mappedByteBuffer.array();
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("요청된 line 이 파일에 기록된 line 수를 초과합니다.");
+            return null;
         }
         return null;
     }
 
     @Override
     public String getLine(String locate, int lineCount) {
-        byte[] fileByteArr = getData(locate);
+        byte[] fileByteArr = getData(locate); //자동으로 Cach 확인.
         try {
             String decodedString = new String(fileByteArr, "UTF-8");
             String[] decodedArray = decodedString.split(configuration.delimiter);
@@ -175,6 +208,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             e.printStackTrace();
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("요청된 line 이 파일에 기록된 line 수를 초과합니다.");
+            return null;
         }
         return null;
     }
