@@ -33,12 +33,20 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         };
 
         File rootDir = new File(configuration.root);
+        if(!rootDir.exists()){
+            System.out.println("루트 디렉토리가 존재하지 않습니다.");
+            rootDir.mkdir();
+        }
+        rootDir.listFiles();
         File[] rootContents = rootDir.listFiles();
 
         //이전에 저장되어 있는 파일의 목록 읽기
-        //TODO: 가장 처음 생성 시 처리
-        for (File file : rootContents) {
-            fileHashMap.put(file.getName(), 1);
+        if (rootContents == null || rootContents.length == 0) {
+            System.out.println("파일 시스템을 새롭게 생성합니다.");
+        } else {
+            for (File file : rootContents) {
+                fileHashMap.put(file.getName(), 1);
+            }
         }
     }
 
@@ -175,7 +183,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
                 FileChannel fileChannel = file.getChannel();
                 FileLock lock = fileChannel.lock();
 
-                MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY,0,fileChannel.size());
+                MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
                 //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
                 cache.put(locate, mappedByteBuffer.array());
                 mappedByteBuffer.clear();
