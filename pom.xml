@@ -20,6 +20,15 @@
 
     <dependencies>
         <!-- ==================== -->
+        <!-- =======Herring====== -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>org.herring</groupId>
+            <artifactId>herring-core</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- ==================== -->
         <!-- ====Commons-conf==== -->
         <!-- ==================== -->
         <dependency>
