@@ -210,7 +210,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     @Override
     public String getLine(String locate, int lineCount) {
-        byte[] fileByteArr = getData(locate); //자동으로 Cach 확인.
+        byte[] fileByteArr = getData(locate); //자동으로 Cache 확인.
         try {
             String decodedString = new String(fileByteArr, "UTF-8");
             String[] decodedArray = decodedString.split(configuration.delimiter);
