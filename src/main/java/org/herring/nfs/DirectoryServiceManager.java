@@ -26,7 +26,7 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
     public DirectoryServiceManager() {
         fileHashMap = new ConcurrentHashMap<String, Integer>();
 
-        //FIFO를 위한 초기화
+        //FIFO를 위한 cache 초기화
         cache = new LinkedHashMap<String, byte[]>(configuration.cacheSize + 1, .75F, false) {
             protected boolean removeEldestEntry(Map.Entry<String, byte[]> eldest) {
                 return size() > configuration.cacheSize;
