@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 13. 6. 6.
  * Time: 오후 10:38
  */
+@Deprecated
 public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     static LinkedHashMap<String, byte[]> cache;
@@ -52,13 +53,13 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
     }
 
     @Override
-    public void putData(String locate, String data) {
+    public boolean putData(String locate, String data) {
         if (fileHashMap.get(locate) != null) {
             System.out.println("Already exist file!");
-            return;
+            return false;
         }
         try {
-            fileHashMap.put(locate,1);
+            fileHashMap.put(locate, 1);
             String rootDirectory = configuration.root;
 
             RandomAccessFile addedFile = new RandomAccessFile(rootDirectory + "/" + locate, "rw");
@@ -81,22 +82,24 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
             cache.put(locate, data.getBytes());
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            return false;
+
         }
+        return true;
+
     }
 
     @Override
-    public void putData(String locate, List<String> data) {
+    public boolean putData(String locate, List<String> data) {
         if (fileHashMap.get(locate) != null) {
             System.out.println("Already exist file!");
-            return;
+            return false;
         }
 
         try {
-            fileHashMap.put(locate,1);
+            fileHashMap.put(locate, 1);
 
             String rootDirectory = configuration.root;
 
@@ -126,11 +129,12 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
             //최근 내용을 Cache에 저장 - cache의 사이즈 초과라면, FIFO 방식으로 진행
             cache.put(locate, inputData.getBytes());
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+
+            return false;
         }
+        return true;
     }
 
     @Override
