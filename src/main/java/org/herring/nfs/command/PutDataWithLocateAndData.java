@@ -1,6 +1,7 @@
 package org.herring.nfs.command;
 
 import org.herring.nfs.CommandType;
+import org.herring.nfs.response.Response;
 
 /**
  * << Description >>
@@ -27,8 +28,9 @@ public class PutDataWithLocateAndData extends AbstractCommand {
     }
 
     @Override
-    public void execute() {
-        executor.execut_putData_locate_data();
+    public Response execute() {
+        Response response = executor.execute_putData_locate_data();
+        return response;
     }
 
     public String getLocate() {

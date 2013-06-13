@@ -1,6 +1,8 @@
 package org.herring.nfs.command;
 
 import org.herring.nfs.DirectoryServiceManager;
+import org.herring.nfs.response.PutCommandResponse;
+import org.herring.nfs.response.Response;
 
 /**
  * << Description >>
@@ -20,7 +22,8 @@ public class CommandExecutor {
         this.putData_locate_data = command;
     }
 
-    public void execut_putData_locate_data() {
-        manager.putData(putData_locate_data.getLocate(), putData_locate_data.getData());
+    public Response execute_putData_locate_data() {
+        boolean result = manager.putData(putData_locate_data.getLocate(), putData_locate_data.getData());
+        return new PutCommandResponse(result);
     }
 }

@@ -10,24 +10,21 @@ import org.herring.nfs.CommandType;
  */
 public class GetCommandResponse implements Response {
     CommandType type;
-    String response;
+    private String response;
 
-    public GetCommandResponse() {
-        this.type = CommandType.GET;
-        this.response = "";
-    }
-
-    @Override
-    public Object getResponse() {
-        return response;
-    }
-
-    @Override
-    public void setResponse(Object response) {
+    public GetCommandResponse(Object response){
         try {
+            this.type = CommandType.GET;
             this.response = (String) response;
         } catch (ClassCastException e) {
             System.out.println("setResponse Casting 오류");
         }
+    }
+
+    @Override
+    public Object getResponse() {
+        if(type == null || response == null)
+            return null;
+        return response;
     }
 }

@@ -1,5 +1,7 @@
 package org.herring.nfs.command;
 
+import org.herring.nfs.response.Response;
+
 /**
  * << Description >>
  * User: hyunje
@@ -7,7 +9,7 @@ package org.herring.nfs.command;
  * Time: 오전 3:43
  */
 public interface Command {
-    void execute();
+    Response execute();
 
     void setExecutor(CommandExecutor executor);
 

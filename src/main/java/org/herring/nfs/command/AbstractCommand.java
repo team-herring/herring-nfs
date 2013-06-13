@@ -1,6 +1,7 @@
 package org.herring.nfs.command;
 
 import org.herring.nfs.CommandType;
+import org.herring.nfs.response.Response;
 
 /**
  * << Description >>
@@ -24,7 +25,7 @@ public abstract class AbstractCommand implements Command {
         this.executor = executor;
     }
 
-    public abstract void execute();
+    public abstract Response execute();
 
     public abstract void registerToExecutor();
 }

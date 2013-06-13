@@ -10,24 +10,21 @@ import org.herring.nfs.CommandType;
  */
 public class PutCommandResponse implements Response {
     CommandType type;
-    boolean response;
+    private boolean response;
 
-    public PutCommandResponse(){
+    public PutCommandResponse(Object response) {
         this.type = CommandType.PUT;
-        this.response = false;
+        try {
+            this.response = (Boolean) response;
+        } catch (ClassCastException e) {
+            System.out.println("setResponse Casting 오류!");
+        }
     }
 
     @Override
     public Object getResponse() {
+        if (type == null)
+            return null;
         return response;
-    }
-
-    @Override
-    public void setResponse(Object response) {
-        try{
-            this.response = (Boolean)response;
-        } catch (ClassCastException e){
-            System.out.println("setResponse Casting 오류!");
-        }
     }
 }
