@@ -7,6 +7,8 @@ import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
 import org.herring.core.protocol.handler.AsyncMessageHandler;
 import org.herring.core.protocol.handler.MessageHandler;
+import org.herring.nfs.command.Command;
+import org.herring.nfs.command.CommandExecutor;
 
 /**
  * << Description >>
@@ -22,12 +24,23 @@ public class DirectoryServiceManagerDaemon {
     public static void main(String[] args) throws Exception {
         final DirectoryServiceManagerDaemon managerDaemon = new DirectoryServiceManagerDaemon();
         HerringCodec codec = new SerializableCodec();
+        final CommandExecutor commandExecutor = new CommandExecutor(manager);
+
         MessageHandler messageHandler = new AsyncMessageHandler() {
             @Override
             public boolean messageArrived(NetworkContext context, Object data) throws Exception {
+                Command requestedCommand = (Command)data;
+                requestedCommand.setExecutor(commandExecutor);
+                requestedCommand.registerToExecutor();
+                requestedCommand.execute();
+
+                //TODO : Return Value에 대해 처리해야한다.
+
+/*
                 NetworkFileSystemAPIHandler apiHandler = (NetworkFileSystemAPIHandler) data;
                 byte[] responseResult = null;
                 boolean success = false;
+*/
 
                 //Registry 형태로 - command id 를 통해 call
                 //execution을 한 줄로.
@@ -61,7 +74,7 @@ public class DirectoryServiceManagerDaemon {
 
 
 
-                context.sendObject(responseResult);
+//                context.sendObject(responseResult);
 
                 return true; // 비동기 통신이므로 현재 핸들러에서 메시지를 사용했음을 알린다.
             }

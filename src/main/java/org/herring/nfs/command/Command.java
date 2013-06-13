@@ -8,4 +8,8 @@ package org.herring.nfs.command;
  */
 public interface Command {
     void execute();
+
+    void setExecutor(CommandExecutor executor);
+
+    void registerToExecutor();
 }

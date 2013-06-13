@@ -7,7 +7,8 @@ package org.herring.nfs.command;
  * Time: 오전 8:50
  */
 public abstract class AbstractCommand implements Command {
-    private CommandType type;
+    protected CommandExecutor executor = null;
+    protected CommandType type;
 
     public AbstractCommand(CommandType type) {
         setType(type);
@@ -17,7 +18,13 @@ public abstract class AbstractCommand implements Command {
         this.type = type;
     }
 
+    public void setExecutor(CommandExecutor executor) {
+        this.executor = executor;
+    }
+
     public abstract void execute();
+
+    public abstract void registerToExecutor();
 
     enum CommandType {
         PUT, GET

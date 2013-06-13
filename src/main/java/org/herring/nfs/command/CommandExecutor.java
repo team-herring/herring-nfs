@@ -12,11 +12,15 @@ public class CommandExecutor {
     private DirectoryServiceManager manager;
     private PutDataWithLocateAndData putData_locate_data;
 
-    public void registerPutDataWithLocateAndData(PutDataWithLocateAndData command){
+    public CommandExecutor(DirectoryServiceManager manager) {
+        this.manager = manager;
+    }
+
+    public void registerPutDataWithLocateAndData(PutDataWithLocateAndData command) {
         this.putData_locate_data = command;
     }
 
-    public void execut_putData_locate_data(){
-        manager.putData(putData_locate_data.getLocate(),putData_locate_data.getData());
+    public void execut_putData_locate_data() {
+        manager.putData(putData_locate_data.getLocate(), putData_locate_data.getData());
     }
 }
