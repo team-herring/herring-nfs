@@ -23,7 +23,15 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
     final Configuration configuration = Configuration.getInstance();
     ConcurrentHashMap<String, Integer> fileHashMap;
 
-    public DirectoryServiceManager() {
+    public static DirectoryServiceManager getInstance(){
+        return DirectoryServiceManagerHolder.INSTANCE;
+    }
+
+    private static final class DirectoryServiceManagerHolder{
+        private static final DirectoryServiceManager INSTANCE = new DirectoryServiceManager();
+    }
+
+    private DirectoryServiceManager() {
         fileHashMap = new ConcurrentHashMap<String, Integer>();
 
         //FIFO를 위한 cache 초기화

@@ -1,5 +1,7 @@
 package org.herring.nfs.command;
 
+import org.herring.nfs.CommandType;
+
 /**
  * << Description >>
  * User: hyunje
@@ -25,8 +27,4 @@ public abstract class AbstractCommand implements Command {
     public abstract void execute();
 
     public abstract void registerToExecutor();
-
-    enum CommandType {
-        PUT, GET
-    }
 }

@@ -17,20 +17,23 @@ import org.herring.nfs.command.CommandExecutor;
  */
 public class DirectoryServiceManagerDaemon {
     private final static int port = 9300;
-    private static DirectoryServiceManager manager = new DirectoryServiceManager();
+    private static DirectoryServiceManager manager = DirectoryServiceManager.getInstance();
     private ServerComponent serverComponent;
 
     public static void main(String[] args) throws Exception {
         final DirectoryServiceManagerDaemon managerDaemon = new DirectoryServiceManagerDaemon();
         HerringCodec codec = new SerializableCodec();
-        final CommandExecutor commandExecutor = new CommandExecutor(manager);
 
         MessageHandler messageHandler = new AsyncMessageHandler() {
             @Override
             public boolean messageArrived(NetworkContext context, Object data) throws Exception {
+                //Command 실행 준비
+                CommandExecutor commandExecutor = new CommandExecutor(manager);
                 Command requestedCommand = (Command) data;
                 requestedCommand.setExecutor(commandExecutor);
                 requestedCommand.registerToExecutor();
+
+                //Command 실행
                 requestedCommand.execute();
 
                 //TODO : Return Value에 대해 처리해야한다.

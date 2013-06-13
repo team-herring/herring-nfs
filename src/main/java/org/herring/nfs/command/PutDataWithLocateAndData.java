@@ -1,5 +1,7 @@
 package org.herring.nfs.command;
 
+import org.herring.nfs.CommandType;
+
 /**
  * << Description >>
  * User: hyunje
