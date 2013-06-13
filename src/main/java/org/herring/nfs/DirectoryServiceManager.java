@@ -189,7 +189,10 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         try {
             //Cache Hit
             if (cache.containsKey(locate)) {
-                Arrays.copyOfRange(cache.get(locate), offset, offset + size);
+//                byte[] cacheHit = cache.get(locate);
+//                byte[] result =  Arrays.copyOfRange(cacheHit, offset, offset + size);
+//                return result;
+                return Arrays.copyOfRange(cache.get(locate),offset,offset+size);
             } else { //Cache Hit Fail
                 String rootDirectory = configuration.root;
 

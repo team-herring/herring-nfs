@@ -21,11 +21,12 @@ import java.util.List;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DirectoryServiceManagerTest {
-    static DirectoryServiceManager manager = new DirectoryServiceManager();
+    static DirectoryServiceManager manager;
 
 
     @BeforeClass
     public static void setUp() throws Exception{
+        manager = DirectoryServiceManager.getInstance();
         Assert.assertNotNull(DirectoryServiceManager.cache);
         Assert.assertNotNull(manager);
         Assert.assertNotNull(manager.configuration);
@@ -65,6 +66,12 @@ public class DirectoryServiceManagerTest {
         List<String> dataList = new LinkedList<String>();
         dataList.addAll(Arrays.asList(data));
         manager.putData(locate,dataList);
+        String locate3 = "3";
+        String[] data3 = {"data_1", "data_2", "data_3", "data_4", "data_5", "data_6", "data_7", "data_8", "data_9", "data_10", "data_11", "data_12"};
+        List<String> dataList3 = new LinkedList<String>();
+        dataList3.addAll(Arrays.asList(data3));
+        manager.putData(locate3, dataList3);
+
     }
 
     /**
@@ -91,7 +98,12 @@ public class DirectoryServiceManagerTest {
      */
     @Test
     public void test3GetData() throws Exception {
-
+        String locate3 = "3";
+        byte[] alldata = manager.getData(locate3);
+        int semiSize = (alldata.length/12);
+        byte[] data = manager.getData(locate3,semiSize*2,semiSize*3);
+        String result = new String(data);
+        System.out.println("getData(String,int,int) : "+result);
     }
 
     /**
@@ -100,6 +112,8 @@ public class DirectoryServiceManagerTest {
      */
     @Test
     public void test4GetLine() throws Exception {
-
+        String locate3 = "3";
+        String data = manager.getLine(locate3, 7);
+        System.out.println("getLine(String,int) : "+data);
     }
 }
