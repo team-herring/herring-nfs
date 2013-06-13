@@ -7,18 +7,24 @@ package org.herring.nfs.command;
  * Time: 오전 10:40
  */
 public class PutDataWithLocateAndData extends AbstractCommand {
+    private CommandExecutor register;
+
     private String locate;
     private String data;
 
-    public PutDataWithLocateAndData(String locate, String data) {
+
+    public PutDataWithLocateAndData(CommandExecutor register, String locate, String data) {
         super(CommandType.PUT);
         this.locate = locate;
         this.data = data;
+
+        this.register = register;
+        this.register.registerPutDataWithLocateAndData(this);
     }
 
     @Override
     public void execute() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        register.execut_putData_locate_data();
     }
 
     public String getLocate() {

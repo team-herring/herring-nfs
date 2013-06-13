@@ -14,7 +14,6 @@ import org.herring.core.protocol.handler.MessageHandler;
  * Date: 13. 6. 9.
  * Time: 오전 12:56
  */
-@Deprecated
 public class DirectoryServiceManagerDaemon {
     private final static int port = 9300;
     private static DirectoryServiceManager manager = new DirectoryServiceManager();
@@ -32,6 +31,8 @@ public class DirectoryServiceManagerDaemon {
 
                 //Registry 형태로 - command id 를 통해 call
                 //execution을 한 줄로.
+
+/*
                 switch (apiHandler.getCommand()) {
                     case putData_locate_data:
                         success = manager.putData(apiHandler.getLocate(), apiHandler.getData());
@@ -56,6 +57,7 @@ public class DirectoryServiceManagerDaemon {
                         System.out.println("Command Error");
                         responseResult = "Command Error".getBytes();
                 }
+*/
 
 
 

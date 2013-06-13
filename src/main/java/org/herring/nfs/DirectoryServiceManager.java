@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 13. 6. 6.
  * Time: 오후 10:38
  */
-@Deprecated
 public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     static LinkedHashMap<String, byte[]> cache;
