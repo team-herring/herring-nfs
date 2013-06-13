@@ -1,6 +1,5 @@
 package org.herring.nfs;
 
-import org.herring.core.nfs.NetworkFileSystemAPIHandler;
 import org.herring.core.protocol.NetworkContext;
 import org.herring.core.protocol.ServerComponent;
 import org.herring.core.protocol.codec.HerringCodec;
@@ -29,53 +28,12 @@ public class DirectoryServiceManagerDaemon {
         MessageHandler messageHandler = new AsyncMessageHandler() {
             @Override
             public boolean messageArrived(NetworkContext context, Object data) throws Exception {
-                Command requestedCommand = (Command)data;
+                Command requestedCommand = (Command) data;
                 requestedCommand.setExecutor(commandExecutor);
                 requestedCommand.registerToExecutor();
                 requestedCommand.execute();
 
                 //TODO : Return Value에 대해 처리해야한다.
-
-/*
-                NetworkFileSystemAPIHandler apiHandler = (NetworkFileSystemAPIHandler) data;
-                byte[] responseResult = null;
-                boolean success = false;
-*/
-
-                //Registry 형태로 - command id 를 통해 call
-                //execution을 한 줄로.
-
-/*
-                switch (apiHandler.getCommand()) {
-                    case putData_locate_data:
-                        success = manager.putData(apiHandler.getLocate(), apiHandler.getData());
-                        if (success)
-                            responseResult = "putData_locate_data method executed".getBytes();
-                        break;
-                    case putData_locate_datalist:
-                        success = manager.putData(apiHandler.getLocate(), apiHandler.getDataList());
-                        if (success)
-                            responseResult = "putData_locate_dataList method executed".getBytes();
-                        break;
-                    case getData_locate:
-                        responseResult = manager.getData(apiHandler.getLocate());
-                        break;
-                    case getData_locate_offset_size:
-                        responseResult = manager.getData(apiHandler.getLocate(), apiHandler.getOffset(), apiHandler.getSize());
-                        break;
-                    case getLine_locate_linecount:
-                        responseResult = manager.getLine(apiHandler.getLocate(), apiHandler.getLinecount()).getBytes();
-                        break;
-                    default:
-                        System.out.println("Command Error");
-                        responseResult = "Command Error".getBytes();
-                }
-*/
-
-
-
-//                context.sendObject(responseResult);
-
                 return true; // 비동기 통신이므로 현재 핸들러에서 메시지를 사용했음을 알린다.
             }
         };
