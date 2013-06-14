@@ -16,6 +16,7 @@ public class CommandExecutor {
     private PutDataWithLocateAndData putData_locate_data;
     private PutDataWithLocateAndDataList putData_locate_dataList;
     private GetDataWithLocate getData_locate;
+    private GetDataWithLocateAndOffset getData_locate_offset_size;
 
     public CommandExecutor(DirectoryServiceManager manager) {
         this.manager = manager;
@@ -53,4 +54,12 @@ public class CommandExecutor {
         return new GetCommandResponse(result);
     }
 
+    //getData(String locate, int offset, int size)
+    public void registerGetDataWithLocateAndOffset(GetDataWithLocateAndOffset command) {
+        this.getData_locate_offset_size = command;
+    }
+    public Response execute_getDate_locate_offset_size() {
+        byte[] result = manager.getData(getData_locate_offset_size.getLocate(),getData_locate_offset_size.getOffset(),getData_locate_offset_size.getSize());
+        return new GetCommandResponse(result);
+    }
 }
