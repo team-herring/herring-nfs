@@ -18,29 +18,34 @@ import java.io.Serializable;
  * Date: 13. 6. 11.
  * Time: 오전 10:40
  */
-public class GetDataWithLocate extends AbstractCommand implements Serializable {
+public class GetLineWithLocateAndLinecount extends AbstractCommand implements Serializable {
 
     private String locate;
+    private int linecount;
 
 
-    public GetDataWithLocate(String locate) {
+    public GetLineWithLocateAndLinecount(String locate, int linecount) {
         super(CommandType.GET);
         this.locate = locate;
-
+        this.linecount = linecount;
     }
 
     @Override
     public void registerToExecutor() {
-        this.executor.registerGetDataWithLocate(this);
+        this.executor.registerGetLineWithLocateAndLinecount(this);
     }
 
     @Override
     public Response execute() {
-        Response response = executor.execute_getData_locate();
+        Response response = executor.execute_getLine_locate_linecount();
         return response;
     }
 
     public String getLocate() {
         return locate;
+    }
+
+    public int getLinecount() {
+        return linecount;
     }
 }

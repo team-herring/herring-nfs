@@ -5,10 +5,7 @@ import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
 import org.herring.core.protocol.handler.MessageHandler;
 import org.herring.core.protocol.handler.SyncMessageHandler;
-import org.herring.nfs.command.GetDataWithLocate;
-import org.herring.nfs.command.GetDataWithLocateAndOffset;
-import org.herring.nfs.command.PutDataWithLocateAndData;
-import org.herring.nfs.command.PutDataWithLocateAndDataList;
+import org.herring.nfs.command.*;
 import org.herring.nfs.response.Response;
 
 import java.util.List;
@@ -146,21 +143,17 @@ public class NetworkFileSystemClient {
      * @throws InterruptedException
      */
 
-    /*
     public String getLine(String locate, int linecount) throws InterruptedException {
         if (!clientComponent.isActive()) {
             System.out.println("NetworkFileSystemClient가 실행중이지 않습니다.");
             return null;
         }
-        NetworkFileSystemAPIHandler apiHandler = new NetworkFileSystemAPIHandler();
-        apiHandler.makeCommand_getLine_locate_linecount(locate, linecount);
 
-        clientComponent.getNetworkContext().sendObject(apiHandler);
+        GetLineWithLocateAndLinecount command = new GetLineWithLocateAndLinecount(locate,linecount);
+        clientComponent.getNetworkContext().sendObject(command);
         clientComponent.getNetworkContext().waitUntil("received");
 
-        String received = new String((byte[]) clientComponent.getNetworkContext().getMessageFromQueue());
-        System.out.println("Processed result on NFS : " + received);
-        return received;
+        Response response = (Response)clientComponent.getNetworkContext().getMessageFromQueue();
+        return (String)response.getResponse();
     }
-    */
 }

@@ -17,6 +17,7 @@ public class CommandExecutor {
     private PutDataWithLocateAndDataList putData_locate_dataList;
     private GetDataWithLocate getData_locate;
     private GetDataWithLocateAndOffset getData_locate_offset_size;
+    private GetLineWithLocateAndLinecount getLine_locate_linecount;
 
     public CommandExecutor(DirectoryServiceManager manager) {
         this.manager = manager;
@@ -49,7 +50,7 @@ public class CommandExecutor {
     public void registerGetDataWithLocate(GetDataWithLocate command) {
         this.getData_locate = command;
     }
-    public Response execute_getDate_locate(){
+    public Response execute_getData_locate(){
         byte[] result = manager.getData(getData_locate.getLocate());
         return new GetCommandResponse(result);
     }
@@ -58,8 +59,16 @@ public class CommandExecutor {
     public void registerGetDataWithLocateAndOffset(GetDataWithLocateAndOffset command) {
         this.getData_locate_offset_size = command;
     }
-    public Response execute_getDate_locate_offset_size() {
+    public Response execute_getData_locate_offset_size() {
         byte[] result = manager.getData(getData_locate_offset_size.getLocate(),getData_locate_offset_size.getOffset(),getData_locate_offset_size.getSize());
+        return new GetCommandResponse(result);
+    }
+
+    public void registerGetLineWithLocateAndLinecount(GetLineWithLocateAndLinecount command) {
+        this.getLine_locate_linecount = command;
+    }
+    public Response execute_getLine_locate_linecount(){
+        String result = manager.getLine(getLine_locate_linecount.getLocate(),getLine_locate_linecount.getLinecount());
         return new GetCommandResponse(result);
     }
 }

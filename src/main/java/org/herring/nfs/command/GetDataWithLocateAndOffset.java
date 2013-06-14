@@ -39,7 +39,7 @@ public class GetDataWithLocateAndOffset extends AbstractCommand implements Seria
 
     @Override
     public Response execute() {
-        Response response = executor.execute_getDate_locate_offset_size();
+        Response response = executor.execute_getData_locate_offset_size();
         return response;
     }
 
