@@ -4,7 +4,6 @@ import org.herring.nfs.CommandType;
 import org.herring.nfs.response.Response;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * putData(String location, String data)
@@ -19,35 +18,29 @@ import java.util.List;
  * Date: 13. 6. 11.
  * Time: 오전 10:40
  */
-public class PutDataWithLocateAndDataList extends AbstractCommand implements Serializable {
+public class GetDataWithLocate extends AbstractCommand implements Serializable {
 
     private String locate;
-    private List<String> data;
 
 
-    public PutDataWithLocateAndDataList(String locate, List<String> dataList) {
-        super(CommandType.PUT);
+    public GetDataWithLocate(String locate) {
+        super(CommandType.GET);
         this.locate = locate;
-        this.data = dataList;
 
     }
 
     @Override
     public void registerToExecutor() {
-        this.executor.registerPutDataWithLocateAndDataList(this);
+        this.executor.registerGetDataWithLocate(this);
     }
 
     @Override
     public Response execute() {
-        Response response = executor.execute_putData_locate_dataList();
+        Response response = executor.execute_getDate_locate();
         return response;
     }
 
     public String getLocate() {
         return locate;
-    }
-
-    public List<String> getData() {
-        return data;
     }
 }
