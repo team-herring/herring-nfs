@@ -26,7 +26,7 @@ public class DirectoryServiceManagerDaemon {
         final DirectoryServiceManagerDaemon managerDaemon = new DirectoryServiceManagerDaemon();
 
         if(clearOnStart){
-
+            manager.clearAll();
         }
         HerringCodec codec = new SerializableCodec();
 
