@@ -20,9 +20,14 @@ public class DirectoryServiceManagerDaemon {
     private final static int port = 9300;
     private static DirectoryServiceManager manager = DirectoryServiceManager.getInstance();
     private ServerComponent serverComponent;
+    private final static boolean clearOnStart = true;
 
     public static void main(String[] args) throws Exception {
         final DirectoryServiceManagerDaemon managerDaemon = new DirectoryServiceManagerDaemon();
+
+        if(clearOnStart){
+
+        }
         HerringCodec codec = new SerializableCodec();
 
         MessageHandler messageHandler = new AsyncMessageHandler() {

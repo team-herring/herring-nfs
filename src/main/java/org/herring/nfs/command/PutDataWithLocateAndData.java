@@ -3,6 +3,8 @@ package org.herring.nfs.command;
 import org.herring.nfs.CommandType;
 import org.herring.nfs.response.Response;
 
+import java.io.Serializable;
+
 /**
  * putData(String location, String data)
  * 함수에 대한 Command 객체
@@ -16,7 +18,7 @@ import org.herring.nfs.response.Response;
  * Date: 13. 6. 11.
  * Time: 오전 10:40
  */
-public class PutDataWithLocateAndData extends AbstractCommand {
+public class PutDataWithLocateAndData extends AbstractCommand implements Serializable {
 
     private String locate;
     private String data;

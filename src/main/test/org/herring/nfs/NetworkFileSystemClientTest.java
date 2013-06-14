@@ -35,7 +35,7 @@ public class NetworkFileSystemClientTest {
     @Test
     public void test0PutData() throws Exception {
         System.out.println("test0PutData");
-        if (client.putData("100", "Test Data"))
+        if (client.putData("101", "Test Data"))
             System.out.println("Success");
         else
             System.out.println("Fail");

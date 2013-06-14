@@ -13,4 +13,5 @@ public interface DirectoryServiceInterface {
     byte[] getData(String locate);
     byte[] getData(String locate, int offset, int size);
     String getLine(String locate, int lineCount);
+    void clearAll();
 }

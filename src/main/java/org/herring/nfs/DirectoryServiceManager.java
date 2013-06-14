@@ -237,4 +237,14 @@ public class DirectoryServiceManager implements DirectoryServiceInterface {
         }
         return null;
     }
+
+    @Override
+    public void clearAll() {
+        File rootLocate = new File(configuration.root);
+        File[] contents = rootLocate.listFiles();
+        for (File content : contents) {
+            content.delete();
+        }
+        fileHashMap.clear();
+    }
 }

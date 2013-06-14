@@ -3,6 +3,8 @@ package org.herring.nfs.command;
 import org.herring.nfs.CommandType;
 import org.herring.nfs.response.Response;
 
+import java.io.Serializable;
+
 /**
  * Command의 추상객체
  *
@@ -10,7 +12,7 @@ import org.herring.nfs.response.Response;
  * Date: 13. 6. 11.
  * Time: 오전 8:50
  */
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractCommand implements Command, Serializable {
     protected CommandExecutor executor = null;
     protected CommandType type;
 
