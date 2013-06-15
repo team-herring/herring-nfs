@@ -3,7 +3,8 @@ package org.herring.nfs.response;
 import org.herring.nfs.CommandType;
 
 /**
- * << Description >>
+ * Get 형태의 Command의 Response
+ * String의 Return을 갖는다.
  * User: hyunje
  * Date: 13. 6. 13.
  * Time: 오후 9:31

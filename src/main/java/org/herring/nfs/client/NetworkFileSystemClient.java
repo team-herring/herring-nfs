@@ -15,7 +15,6 @@ import java.util.List;
  * API를 Call 하기 이전에 openConnection() 을 수행하여 연결을 먼저 해야 한다.
  * <p/>
  * TODO : Cache 추가
- * TODO : Test
  * <p/>
  * User: hyunje
  * Date: 13. 6. 9.

@@ -11,7 +11,9 @@ import org.herring.nfs.command.CommandExecutor;
 import org.herring.nfs.response.Response;
 
 /**
- * << Description >>
+ * Network File System Server의 Daemon.
+ * clearOnStart flag 를 이용해 처음 시작할 때 기존의 데이터를 삭제할 것인지 여부를 판별한다.
+ *
  * User: hyunje
  * Date: 13. 6. 9.
  * Time: 오전 12:56
@@ -26,6 +28,7 @@ public class DirectoryServiceManagerDaemon {
         final DirectoryServiceManagerDaemon managerDaemon = new DirectoryServiceManagerDaemon();
 
         if(clearOnStart){
+            System.out.println("Network File System Daemon을 실행합니다. 기존 데이터를 삭제합니다.");
             manager.clearAll();
         }
         HerringCodec codec = new SerializableCodec();

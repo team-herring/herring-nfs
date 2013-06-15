@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * << Description >>
+ * NetworkFileSystemClient 테스트 클래스.
+ * 테스트를 하기 위해서 NetworkFileSystemClient 객체를 host, ip 로 초기화하여 사용한다.
  * User: hyunje
  * Date: 13. 6. 14.
  * Time: 오전 12:27
@@ -32,6 +33,7 @@ public class NetworkFileSystemClientTest {
 
     @AfterClass
     public static void testCloseConnection() throws Exception {
+        System.out.println("Close connection");
         client.closeConnection();
     }
 

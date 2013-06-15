@@ -6,7 +6,9 @@ import org.herring.nfs.response.PutCommandResponse;
 import org.herring.nfs.response.Response;
 
 /**
- * << Description >>
+ * Command 객체들의 Mediator 객체.
+ * Command 를 register 함수를 이용해 Executor로 등록을 한 후에,
+ * Command 객체에서 정의된 Command.execute() 를 이용해 Command를 수행한다.
  * User: hyunje
  * Date: 13. 6. 11.
  * Time: 오전 10:49

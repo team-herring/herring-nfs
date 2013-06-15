@@ -3,7 +3,8 @@ package org.herring.nfs.response;
 import org.herring.nfs.CommandType;
 
 /**
- * << Description >>
+ * Put 형태의 Command의 Response.
+ * Boolean의 return을 갖는다.
  * User: hyunje
  * Date: 13. 6. 13.
  * Time: 오후 9:38

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * putData(String location, String data)
+ * putData(String location, List<String> dataList)
  * 함수에 대한 Command 객체
  *
  * - Client에서 API를 호출 할 때

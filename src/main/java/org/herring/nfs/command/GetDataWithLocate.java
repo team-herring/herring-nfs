@@ -6,7 +6,7 @@ import org.herring.nfs.response.Response;
 import java.io.Serializable;
 
 /**
- * putData(String location, String data)
+ * getData(String location)
  * 함수에 대한 Command 객체
  *
  * - Client에서 API를 호출 할 때

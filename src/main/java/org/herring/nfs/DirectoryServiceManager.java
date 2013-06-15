@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * << Description >>
+ * 실제적으로 File을 관리하는 클래스
+ * 최근 사용된 데이터는 Cache로 관리한다.
  * User: hyunje
  * Date: 13. 6. 6.
  * Time: 오후 10:38
