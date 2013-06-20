@@ -45,15 +45,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
-
-        <!-- ==================== -->
-        <!-- =====Commons-io===== -->
-        <!-- ==================== -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commonsio.version}</version>
-        </dependency>
     </dependencies>
 
 
@@ -62,8 +53,13 @@
     <!-- ==================== -->
     <repositories>
         <repository>
-            <id>central</id>
-            <url>http://maven.chiwanpark.com/content/groups/public</url>
+            <id>github</id>
+            <name>GitHub Herring Project Maven Repository</name>
+            <url>https://raw.github.com/team-herring/team-herring.github.io/mvn-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 

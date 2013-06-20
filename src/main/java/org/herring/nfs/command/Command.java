@@ -10,8 +10,6 @@ import org.herring.nfs.response.Response;
  */
 public interface Command {
     Response execute();
-
     void setExecutor(CommandExecutor executor);
-
     void registerToExecutor();
 }

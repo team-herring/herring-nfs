@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DirectoryServiceManager implements DirectoryServiceInterface {
 
     static LinkedHashMap<String, byte[]> cache;
+
     final Configuration configuration = Configuration.getInstance();
     ConcurrentHashMap<String, Integer> fileHashMap;
 

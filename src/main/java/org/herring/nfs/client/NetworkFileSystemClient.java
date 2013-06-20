@@ -61,12 +61,14 @@ public class NetworkFileSystemClient {
             return false;
         }
         PutDataWithLocateAndData command = new PutDataWithLocateAndData(locate, data);
+
         clientComponent.getNetworkContext().sendObject(command);
         clientComponent.getNetworkContext().waitUntil("received");
         Response response = (Response) clientComponent.getNetworkContext().getMessageFromQueue();
-        boolean result = (Boolean) response.getResponse();
-        return result;
+        return (Boolean) response.getResponse();
+
     }
+
 
     /**
      * File System의 원하는 위치에 다수의 데이터 한번에 추가
